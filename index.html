@@ -4,64 +4,147 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lead Impression Calculator</title>
+manifest.json
 
-<link rel="manifest" href  body {
+<style>
+    body {
         font-family: Arial, sans-serif;
         padding: 20px;
-        background: #d9ecff; /* LIGHT BLUE BACKGROUND */
+        background: #d9ecff; /* Light Blue */
         margin: 0;
     }
 
     h2 {
         text-align: center;
         margin-top: 0;
+        font-size: 1.8rem;
+        color: #003366;
+    }
+
+    h3 {
+        color: #003366;
+        margin-top: 25px;
     }
 
     label {
         font-weight: bold;
         display: block;
         margin-top: 12px;
+        color: #003366;
     }
 
     input {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         margin-top: 4px;
         font-size: 1.1rem;
-        box-sizing: border-box;
-    }
-
-    .section-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin-top: 25px;
-    }
-
-    .standoff-block {
-        background: #ffffffaa;
-        padding: 12px;
         border-radius: 8px;
-        margin-top: 18px;
-        box-shadow: 0 0 5px #00000022;
+        border: 1px solid #7bb6e0;
+        background: #ffffffdd;
+        box-shadow: inset 0 0 3px #00000022;
     }
+
+    .block {
+        background: #ffffffee;
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px #00000033;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 22px;
+        padding: 14px;
+        background: #005bb5;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        box-shadow: 0 3px 8px #00000033;
+    }
+
+    .btn:hover { background: #004a92; }
+
 </style>
 
 <script>
+// ----------------------------
+// AUTO CALCULATE
+// ----------------------------
 function calc() {
-    const lp1 = parseFloat(document.getElementById('lp1').value) || 0;
-    const lp2 = parseFloat(document.getElementById('lp2').value) || 0;
+    const lp1 = parseFloat(document.getElementById('pin1').value) || 0;
+    const lp2 = parseFloat(document.getElementById('pin2').value) || 0;
 
     for (let i = 1; i <= 3; i++) {
-        const plug = parseFloat(document.getElementById(`standoff${i}`).value) || 0;
-
-        document.getElementById(`d1_${i}`).value = (plug - lp1).toFixed(3);
-        document.getElementById(`d2_${i}`).value = (plug - lp2).toFixed(3);
+        const so = parseFloat(document.getElementById(`standoff${i}`).value) || 0;
+        document.getElementById(`d1_${i}`).value = (so - lp1).toFixed(3);
+        document.getElementById(`d2_${i}`).value = (so - lp2).toFixed(3);
     }
+
+    saveData();
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
+// ----------------------------
+// AUTO SAVE LOCAL STORAGE
+// ----------------------------
+function saveData() {
+    const data = {
+        pin1: pin1.value,
+        pin2: pin2.value,
+        standoff1: standoff1.value,
+        standoff2: standoff2.value,
+        standoff3: standoff3.value
+    };
+    localStorage.setItem("leadCalcData", JSON.stringify(data));
 }
+
+function loadData() {
+    const saved = JSON.parse(localStorage.getItem("leadCalcData"));
+    if (!saved) return;
+
+    pin1.value   = saved.pin1 || "";
+    pin2.value   = saved.pin2 || "";
+    standoff1.value = saved.standoff1 || "";
+    standoff2.value = saved.standoff2 || "";
+    standoff3.value = saved.standoff3 || "";
+
+    calc();
+}
+
+// ----------------------------
+// EXPORT CSV
+// ----------------------------
+function exportCSV() {
+    const rows = [
+        ["Row", "Standoff", "Diff #1", "Diff #2"],
+        ["1", standoff1.value, d1_1.value, d2_1.value],
+        ["2", standoff2.value, d1_2.value, d2_2.value],
+        ["3", standoff3.value, d1_3.value, d2_3.value]
+    ];
+
+    let csv = rows.map(r => r.join(",")).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Lead_Impression_Data.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// ----------------------------
+// ENABLE SERVICE WORKER
+// ----------------------------
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+
+window.onload = loadData;
+
 </script>
 </head>
 
@@ -69,54 +152,52 @@ if ('serviceWorker' in navigator) {
 
 <h2>Lead Impression Calculator</h2>
 
-<!-- LEAD PIN INPUTS -->
-<label>Lead Pin No 1</label>
-<input id="lp1" oninput="calc()">
+<!-- PIN INPUTS -->
+<label>Pin #1</label>
+<input id="pin1" oninput="calc()">
 
-<label>Lead Pin No 2</label>
-<input id="lp2" oninput="calc()">
+<label>Pin #2</label>
+<input id="pin2" oninput="calc()">
 
-<!-- STAND-OFF ROW 1 -->
-<div class="standoff-block">
-    <div class="section-title">Stand-Off 1</div>
+<h3>Mandrel:</h3>
 
-    <label>Stand-Off</label>
+<!-- STANDOFF ROW 1 -->
+<div class="block">
+    <label>Standoff #1</label>
     <input id="standoff1" oninput="calc()">
 
-    <label>Diff No1</label>
+    <label>Diff #1</label>
     <input id="d1_1" readonly>
 
-    <label>Diff No2</label>
+    <label>Diff #2</label>
     <input id="d2_1" readonly>
 </div>
 
-<!-- STAND-OFF ROW 2 -->
-<div class="standoff-block">
-    <div class="section-title">Stand-Off 2</div>
-
-    <label>Stand-Off</label>
+<!-- STANDOFF ROW 2 -->
+<div class="block">
+    <label>Standoff #2</label>
     <input id="standoff2" oninput="calc()">
 
-    <label>Diff No1</label>
+    <label>Diff #1</label>
     <input id="d1_2" readonly>
 
-    <label>Diff No2</label>
+    <label>Diff #2</label>
     <input id="d2_2" readonly>
 </div>
 
-<!-- STAND-OFF ROW 3 -->
-<div class="standoff-block">
-    <div class="section-title">Stand-Off 3</div>
-
-    <label>Stand-Off</label>
+<!-- STANDOFF ROW 3 -->
+<div class="block">
+    <label>Standoff #3</label>
     <input id="standoff3" oninput="calc()">
 
-    <label>Diff No1</label>
+    <label>Diff #1</label>
     <input id="d1_3" readonly>
 
-    <label>Diff No2</label>
+    <label>Diff #2</label>
     <input id="d2_3" readonly>
 </div>
+
+<button class="btn" onclick="exportCSV()">Export CSV</button>
 
 </body>
 </html>
