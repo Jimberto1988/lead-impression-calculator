@@ -33,28 +33,38 @@ manifest.json
         color: #003366;
     }
 
+    /* Updated input field width for mobile */
     input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 4px;
-        font-size: 1.1rem;
+        width: 90%;
+        max-width: 420px;
+        padding: 10px;
+        margin-top: 6px;
+        font-size: 1.05rem;
         border-radius: 8px;
         border: 1px solid #7bb6e0;
         background: #ffffffdd;
         box-shadow: inset 0 0 3px #00000022;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    /* Updated block width for mobile friendliness */
     .block {
+        width: 92%;
+        max-width: 480px;
         background: #ffffffee;
         padding: 16px;
         border-radius: 12px;
-        margin-top: 18px;
+        margin: 18px auto;
         box-shadow: 0 2px 8px #00000033;
     }
 
     .btn {
-        width: 100%;
-        margin-top: 22px;
+        width: 92%;
+        max-width: 480px;
+        display: block;
+        margin: 22px auto;
         padding: 14px;
         background: #005bb5;
         color: white;
@@ -63,10 +73,10 @@ manifest.json
         font-size: 1.2rem;
         cursor: pointer;
         box-shadow: 0 3px 8px #00000033;
+        text-align: center;
     }
 
     .btn:hover { background: #004a92; }
-
 </style>
 
 <script>
@@ -104,8 +114,8 @@ function loadData() {
     const saved = JSON.parse(localStorage.getItem("leadCalcData"));
     if (!saved) return;
 
-    pin1.value   = saved.pin1 || "";
-    pin2.value   = saved.pin2 || "";
+    pin1.value = saved.pin1 || "";
+    pin2.value = saved.pin2 || "";
     standoff1.value = saved.standoff1 || "";
     standoff2.value = saved.standoff2 || "";
     standoff3.value = saved.standoff3 || "";
@@ -161,7 +171,7 @@ window.onload = loadData;
 
 <h3>Mandrel:</h3>
 
-<!-- STANDOFF ROW 1 -->
+<!-- STANDOFF 1 -->
 <div class="block">
     <label>Standoff #1</label>
     <input id="standoff1" oninput="calc()">
@@ -173,7 +183,7 @@ window.onload = loadData;
     <input id="d2_1" readonly>
 </div>
 
-<!-- STANDOFF ROW 2 -->
+<!-- STANDOFF 2 -->
 <div class="block">
     <label>Standoff #2</label>
     <input id="standoff2" oninput="calc()">
@@ -185,7 +195,7 @@ window.onload = loadData;
     <input id="d2_2" readonly>
 </div>
 
-<!-- STANDOFF ROW 3 -->
+<!-- STANDOFF 3 -->
 <div class="block">
     <label>Standoff #3</label>
     <input id="standoff3" oninput="calc()">
@@ -201,24 +211,3 @@ window.onload = loadData;
 
 </body>
 </html>
-
-{
-  "name": "Lead Impression Calculator",
-  "short_name": "LeadCalc",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#d9ecff",
-  "theme_color": "#003366",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
