@@ -1,21 +1,122 @@
 <!DOCTYPE html>
-<html><head><meta name='viewport' content='width=device-width, initial-scale=1'>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lead Impression Calculator</title>
-<link rel='manifest' href='manifest.json'>
+
+<link rel="manifest" href  body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #d9ecff; /* LIGHT BLUE BACKGROUND */
+        margin: 0;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 0;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 12px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 4px;
+        font-size: 1.1rem;
+        box-sizing: border-box;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 25px;
+    }
+
+    .standoff-block {
+        background: #ffffffaa;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 18px;
+        box-shadow: 0 0 5px #00000022;
+    }
+</style>
+
 <script>
-function calc(){
-  var lp1=parseFloat(document.getElementById('lp1').value)||0;
-  var lp2=parseFloat(document.getElementById('lp2').value)||0;
-  [1,2,3].forEach(i=>{
-    var p=parseFloat(document.getElementById('p'+i).value)||0;
-    document.getElementById('d1_'+i).value=(p-lp1).toFixed(3);
-    document.getElementById('d2_'+i).value=(p-lp2).toFixed(3);
-  });
+function calc() {
+    const lp1 = parseFloat(document.getElementById('lp1').value) || 0;
+    const lp2 = parseFloat(document.getElementById('lp2').value) || 0;
+
+    for (let i = 1; i <= 3; i++) {
+        const plug = parseFloat(document.getElementById(`standoff${i}`).value) || 0;
+
+        document.getElementById(`d1_${i}`).value = (plug - lp1).toFixed(3);
+        document.getElementById(`d2_${i}`).value = (plug - lp2).toFixed(3);
+    }
 }
-if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+}
 </script>
-</head><body>
+</head>
+
+<body>
+
 <h2>Lead Impression Calculator</h2>
-<label>Lead Pin No 1</label><input id='lp1' oninput='calc()'>
-<label>Lead Pin No 2</label><input id='lp2' oninput='calc()'>
-<h3>Plug Row 1</h3><input id='p1' oninput='calc()'><label>Difference No 1</label><input id='d1_1' readonly><label>Difference No 2</label><input id='d2_1' readonly><h3>Plug Row 2</h3><input id='p2' oninput='calc()'><label>Difference No 1</label><input id='d1_2' readonly><label>Difference No 2</label><input id='d2_2' readonly><h3>Plug Row 3</h3><input id='p3' oninput='calc()'><label>Difference No 1</label><input id='d1_3' readonly><label>Difference No 2</label><input id='d2_3' readonly></body></html>
+
+<!-- LEAD PIN INPUTS -->
+<label>Lead Pin No 1</label>
+<input id="lp1" oninput="calc()">
+
+<label>Lead Pin No 2</label>
+<input id="lp2" oninput="calc()">
+
+<!-- STAND-OFF ROW 1 -->
+<div class="standoff-block">
+    <div class="section-title">Stand-Off 1</div>
+
+    <label>Stand-Off</label>
+    <input id="standoff1" oninput="calc()">
+
+    <label>Diff No1</label>
+    <input id="d1_1" readonly>
+
+    <label>Diff No2</label>
+    <input id="d2_1" readonly>
+</div>
+
+<!-- STAND-OFF ROW 2 -->
+<div class="standoff-block">
+    <div class="section-title">Stand-Off 2</div>
+
+    <label>Stand-Off</label>
+    <input id="standoff2" oninput="calc()">
+
+    <label>Diff No1</label>
+    <input id="d1_2" readonly>
+
+    <label>Diff No2</label>
+    <input id="d2_2" readonly>
+</div>
+
+<!-- STAND-OFF ROW 3 -->
+<div class="standoff-block">
+    <div class="section-title">Stand-Off 3</div>
+
+    <label>Stand-Off</label>
+    <input id="standoff3" oninput="calc()">
+
+    <label>Diff No1</label>
+    <input id="d1_3" readonly>
+
+    <label>Diff No2</label>
+    <input id="d2_3" readonly>
+</div>
+
+</body>
+</html>
